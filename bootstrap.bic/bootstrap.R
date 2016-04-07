@@ -83,6 +83,7 @@ head(order)
 bics<-matrix(nrow=niters,ncol=2)
 
 #' ### Loop through iterations to generate BIC distributions
+#' Hm, probably there are more R-like ways of doing this without for loops...
 tictoc <- system.time({
   for (i in 1:niters) {
     #write(i,file="") # Verbose output - Turn off for notebook!
