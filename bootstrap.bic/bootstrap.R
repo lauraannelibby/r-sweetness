@@ -11,7 +11,7 @@
 #' The hippocampus generalizes across memories that share item and context information.
 #'
 #' _Details:_ This script compares the fit of additive (linear) versus 
-#' conjunctive (threshold) models for item-in-context coding
+#' conjunctive (threshold) models of item-in-context coding
 #' in anterior hippocampus (hippocampal head) using Bayesian 
 #' Information  Criterion (BIC). A confidence interval for the difference in 
 #' model fit is determined by generating a null distribution using a bootstrap approach.
@@ -38,11 +38,11 @@ summary(data)
 
 #' ## Data manipulation
 
-#' Select only hippocampus head data
+#' ### Select only hippocampus head data
 hipphead <- subset(data, ROI=="Hipp_Head")
 hipphead$ROI <- factor(hipphead$ROI)
 
-#' Create dummy variables for additive and conjunctive coding
+#' ### Create dummy variables for additive and conjunctive coding
 hipphead$conjunctive <- recode(hipphead$Sort, "'bothdiff'=-1 ; 'consame'=-1 ; 'objconsame'=3 ; 'objsame'=-1"
                                , as.factor.result=FALSE, as.numeric.result=TRUE)
 hipphead$additive <- recode(hipphead$Sort, "'bothdiff'=-1 ; 'consame'=0 ; 'objconsame'=1 ; 'objsame'=0",
@@ -71,7 +71,7 @@ getbic <- function(x) {
 
 #' ## Start iterating
 
-#' ### Generate 10000 unique combinations of subjects with replacement
+#' ### Generate `r niters` unique combinations of subjects with replacement
 set.seed(1)
 N <- t(replicate(15000, sample(levels(hipphead$Subj),replace=TRUE)))
 sum(duplicated(N))
