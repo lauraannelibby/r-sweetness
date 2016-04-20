@@ -7,7 +7,7 @@
 #'   toc: true
 #'   toc_float: true
 #' ---
-#' _Project/publication:_ Libby, Ragland, and Ranaganth (Under review). 
+#' _Project/publication:_ Libby, Ragland, and Ranganath (Under review). 
 #' The hippocampus generalizes across memories that share item and context information.
 #'
 #' _Details:_ This script compares the fit of additive (linear) versus 
