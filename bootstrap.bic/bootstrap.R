@@ -7,7 +7,7 @@
 #'   toc: true
 #'   toc_float: true
 #' ---
-#' _Project/publication:_ Libby, Ragland, and Ranganath (Under review). 
+#' _Project/publication:_ Libby, Ragland, and Ranganath ([In preprint](http://biorxiv.org/content/early/2016/04/22/049965)). 
 #' The hippocampus generalizes across memories that share item and context information.
 #'
 #' _Details:_ This script compares the fit of additive (linear) versus 
@@ -33,7 +33,7 @@ suppressMessages(require(lme4))
 datafilename="C:/Users/Laura Libby/Dropbox/CogCon/meansim_ROIs_factors.txt"
 data=read.table(datafilename,header=T)
 
-#' ### Make sure data is formatted correctly
+#' ### Make sure data are formatted correctly
 summary(data)
 
 #' ## Data manipulation
@@ -72,12 +72,12 @@ getbic <- function(x) {
 #' ## Start iterating
 
 #' ### Generate `r niters` unique combinations of subjects with replacement
-set.seed(1)
+set.seed(1) # For replication
 N <- t(replicate(15000, sample(levels(hipphead$Subj),replace=TRUE)))
 sum(duplicated(N))
 order <- N[!(duplicated(N)), ][1:niters, ]
 #' Take a sneak peek at the first 10 "samples"
-head(order)
+head(order, n=10L)
 
 #' ### Initialize output
 bics<-matrix(nrow=niters,ncol=2)

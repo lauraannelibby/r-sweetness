@@ -205,7 +205,7 @@ div.tocify {
 </div>
 
 
-<p><em>Project/publication:</em> Libby, Ragland, and Ranganath (Under review). The hippocampus generalizes across memories that share item and context information.</p>
+<p><em>Project/publication:</em> Libby, Ragland, and Ranganath (<a href="http://biorxiv.org/content/early/2016/04/22/049965">In preprint</a>). The hippocampus generalizes across memories that share item and context information.</p>
 <p><em>Details:</em> This script compares the fit of additive (linear) versus conjunctive (threshold) models of item-in-context coding in anterior hippocampus (hippocampal head) using Bayesian Information Criterion (BIC). A confidence interval for the difference in model fit is determined by generating a null distribution using a bootstrap approach.</p>
 <div id="initialize-settings" class="section level2">
 <h2>Initialize settings</h2>
@@ -231,8 +231,8 @@ div.tocify {
 <pre class="r"><code>datafilename=&quot;C:/Users/Laura Libby/Dropbox/CogCon/meansim_ROIs_factors.txt&quot;
 data=read.table(datafilename,header=T)</code></pre>
 </div>
-<div id="make-sure-data-is-formatted-correctly" class="section level3">
-<h3>Make sure data is formatted correctly</h3>
+<div id="make-sure-data-are-formatted-correctly" class="section level3">
+<h3>Make sure data are formatted correctly</h3>
 <pre class="r"><code>summary(data)</code></pre>
 <pre><code>##              Subj             Sort            ROI      Hem    
 ##  cc10_kv_042313: 64   bothdiff  :320   Amyg     :160   L:640  
@@ -327,48 +327,68 @@ summary(hipphead)</code></pre>
 <h2>Start iterating</h2>
 <div id="generate-104-unique-combinations-of-subjects-with-replacement" class="section level3">
 <h3>Generate 10^{4} unique combinations of subjects with replacement</h3>
-<pre class="r"><code>set.seed(1)
+<pre class="r"><code>set.seed(1) # For replication
 N &lt;- t(replicate(15000, sample(levels(hipphead$Subj),replace=TRUE)))
 sum(duplicated(N))</code></pre>
 <pre><code>## [1] 0</code></pre>
 <pre class="r"><code>order &lt;- N[!(duplicated(N)), ][1:niters, ]</code></pre>
 <p>Take a sneak peek at the first 10 “samples”</p>
-<pre class="r"><code>head(order)</code></pre>
-<pre><code>##      [,1]             [,2]             [,3]             [,4]            
-## [1,] &quot;cc15_ib_051413&quot; &quot;cc18_jk_052813&quot; &quot;cc22_an_072213&quot; &quot;cc9_sl_042213&quot; 
-## [2,] &quot;cc9_sl_042213&quot;  &quot;cc14_lw_050113&quot; &quot;cc24_mi_072613&quot; &quot;cc12_mr_043013&quot;
-## [3,] &quot;cc7_mp_041913&quot;  &quot;cc23_jc_072413&quot; &quot;cc3_jt_040513&quot;  &quot;cc22_an_072213&quot;
-## [4,] &quot;cc9_sl_042213&quot;  &quot;cc15_ib_051413&quot; &quot;cc2_dm_040213&quot;  &quot;cc16_ne_052413&quot;
-## [5,] &quot;cc19_mg_061113&quot; &quot;cc3_cd_040413&quot;  &quot;cc18_jk_052813&quot; &quot;cc16_ne_052413&quot;
-## [6,] &quot;cc24_mi_072613&quot; &quot;cc18_jk_052813&quot; &quot;cc15_ib_051413&quot; &quot;ims_1&quot;         
-##      [,5]             [,6]             [,7]             [,8]            
-## [1,] &quot;cc14_lw_050113&quot; &quot;cc8_ag_041913&quot;  &quot;cc9_sl_042213&quot;  &quot;cc24_mi_072613&quot;
-## [2,] &quot;cc15_ib_051413&quot; &quot;cc18_jk_052813&quot; &quot;cc10_kv_042313&quot; &quot;cc18_jk_052813&quot;
-## [3,] &quot;cc21_sp_071813&quot; &quot;cc3_jt_040513&quot;  &quot;cc10_kv_042313&quot; &quot;cc2_dm_040213&quot; 
-## [4,] &quot;cc24_mi_072613&quot; &quot;cc15_ib_051413&quot; &quot;cc2_dm_040213&quot;  &quot;cc3_jt_040513&quot; 
-## [5,] &quot;cc3_jt_040513&quot;  &quot;cc14_lw_050113&quot; &quot;cc3_cd_040413&quot;  &quot;cc12_mr_043013&quot;
-## [6,] &quot;cc23_jc_072413&quot; &quot;cc14_lw_050113&quot; &quot;cc12_mr_043013&quot; &quot;cc2_dm_040213&quot; 
-##      [,9]             [,10]            [,11]            [,12]           
-## [1,] &quot;cc23_jc_072413&quot; &quot;cc11_cv_042513&quot; &quot;cc14_lw_050113&quot; &quot;cc13_mr_050113&quot;
-## [2,] &quot;cc8_ag_041913&quot;  &quot;cc16_ne_052413&quot; &quot;cc2_dm_040213&quot;  &quot;cc22_an_072213&quot;
-## [3,] &quot;cc3_cd_040413&quot;  &quot;cc24_mi_072613&quot; &quot;cc2_dm_040213&quot;  &quot;cc8_ag_041913&quot; 
-## [4,] &quot;cc11_cv_042513&quot; &quot;cc8_ag_041913&quot;  &quot;cc16_ne_052413&quot; &quot;cc7_mp_041913&quot; 
-## [5,] &quot;cc14_lw_050113&quot; &quot;cc12_mr_043013&quot; &quot;cc14_lw_050113&quot; &quot;cc11_cv_042513&quot;
-## [6,] &quot;cc9_sl_042213&quot;  &quot;cc22_an_072213&quot; &quot;ims_1&quot;          &quot;cc3_cd_040413&quot; 
-##      [,13]            [,14]            [,15]            [,16]           
-## [1,] &quot;cc24_mi_072613&quot; &quot;cc18_jk_052813&quot; &quot;cc3_jt_040513&quot;  &quot;cc2_dm_040213&quot; 
-## [2,] &quot;cc2_dm_040213&quot;  &quot;cc13_mr_050113&quot; &quot;cc7_mp_041913&quot;  &quot;cc24_mi_072613&quot;
-## [3,] &quot;cc19_mg_061113&quot; &quot;cc14_lw_050113&quot; &quot;cc11_cv_042513&quot; &quot;cc11_cv_042513&quot;
-## [4,] &quot;cc16_ne_052413&quot; &quot;cc16_ne_052413&quot; &quot;cc2_dm_040213&quot;  &quot;cc8_ag_041913&quot; 
-## [5,] &quot;cc23_jc_072413&quot; &quot;cc8_ag_041913&quot;  &quot;cc3_jt_040513&quot;  &quot;cc3_jt_040513&quot; 
-## [6,] &quot;cc18_jk_052813&quot; &quot;cc19_mg_061113&quot; &quot;cc12_mr_043013&quot; &quot;cc10_kv_042313&quot;
-##      [,17]            [,18]            [,19]            [,20]           
-## [1,] &quot;cc3_cd_040413&quot;  &quot;ims_1&quot;          &quot;cc18_jk_052813&quot; &quot;cc3_jt_040513&quot; 
-## [2,] &quot;cc3_jt_040513&quot;  &quot;cc12_mr_043013&quot; &quot;cc3_cd_040413&quot;  &quot;cc19_mg_061113&quot;
-## [3,] &quot;cc16_ne_052413&quot; &quot;cc21_sp_071813&quot; &quot;cc24_mi_072613&quot; &quot;cc19_mg_061113&quot;
-## [4,] &quot;cc8_ag_041913&quot;  &quot;cc18_jk_052813&quot; &quot;cc3_jt_040513&quot;  &quot;ims_1&quot;         
-## [5,] &quot;cc2_dm_040213&quot;  &quot;cc19_mg_061113&quot; &quot;cc7_mp_041913&quot;  &quot;cc23_jc_072413&quot;
-## [6,] &quot;cc3_cd_040413&quot;  &quot;cc12_mr_043013&quot; &quot;cc19_mg_061113&quot; &quot;cc23_jc_072413&quot;</code></pre>
+<pre class="r"><code>head(order, n=10L)</code></pre>
+<pre><code>##       [,1]             [,2]             [,3]             [,4]            
+##  [1,] &quot;cc15_ib_051413&quot; &quot;cc18_jk_052813&quot; &quot;cc22_an_072213&quot; &quot;cc9_sl_042213&quot; 
+##  [2,] &quot;cc9_sl_042213&quot;  &quot;cc14_lw_050113&quot; &quot;cc24_mi_072613&quot; &quot;cc12_mr_043013&quot;
+##  [3,] &quot;cc7_mp_041913&quot;  &quot;cc23_jc_072413&quot; &quot;cc3_jt_040513&quot;  &quot;cc22_an_072213&quot;
+##  [4,] &quot;cc9_sl_042213&quot;  &quot;cc15_ib_051413&quot; &quot;cc2_dm_040213&quot;  &quot;cc16_ne_052413&quot;
+##  [5,] &quot;cc19_mg_061113&quot; &quot;cc3_cd_040413&quot;  &quot;cc18_jk_052813&quot; &quot;cc16_ne_052413&quot;
+##  [6,] &quot;cc24_mi_072613&quot; &quot;cc18_jk_052813&quot; &quot;cc15_ib_051413&quot; &quot;ims_1&quot;         
+##  [7,] &quot;ims_1&quot;          &quot;cc2_dm_040213&quot;  &quot;cc2_dm_040213&quot;  &quot;cc13_mr_050113&quot;
+##  [8,] &quot;cc24_mi_072613&quot; &quot;cc23_jc_072413&quot; &quot;cc14_lw_050113&quot; &quot;cc15_ib_051413&quot;
+##  [9,] &quot;cc15_ib_051413&quot; &quot;cc8_ag_041913&quot;  &quot;cc19_mg_061113&quot; &quot;cc3_jt_040513&quot; 
+## [10,] &quot;cc15_ib_051413&quot; &quot;cc13_mr_050113&quot; &quot;cc8_ag_041913&quot;  &quot;cc21_sp_071813&quot;
+##       [,5]             [,6]             [,7]             [,8]            
+##  [1,] &quot;cc14_lw_050113&quot; &quot;cc8_ag_041913&quot;  &quot;cc9_sl_042213&quot;  &quot;cc24_mi_072613&quot;
+##  [2,] &quot;cc15_ib_051413&quot; &quot;cc18_jk_052813&quot; &quot;cc10_kv_042313&quot; &quot;cc18_jk_052813&quot;
+##  [3,] &quot;cc21_sp_071813&quot; &quot;cc3_jt_040513&quot;  &quot;cc10_kv_042313&quot; &quot;cc2_dm_040213&quot; 
+##  [4,] &quot;cc24_mi_072613&quot; &quot;cc15_ib_051413&quot; &quot;cc2_dm_040213&quot;  &quot;cc3_jt_040513&quot; 
+##  [5,] &quot;cc3_jt_040513&quot;  &quot;cc14_lw_050113&quot; &quot;cc3_cd_040413&quot;  &quot;cc12_mr_043013&quot;
+##  [6,] &quot;cc23_jc_072413&quot; &quot;cc14_lw_050113&quot; &quot;cc12_mr_043013&quot; &quot;cc2_dm_040213&quot; 
+##  [7,] &quot;cc3_jt_040513&quot;  &quot;cc2_dm_040213&quot;  &quot;cc21_sp_071813&quot; &quot;cc14_lw_050113&quot;
+##  [8,] &quot;cc3_cd_040413&quot;  &quot;cc2_dm_040213&quot;  &quot;cc13_mr_050113&quot; &quot;cc3_cd_040413&quot; 
+##  [9,] &quot;cc8_ag_041913&quot;  &quot;cc19_mg_061113&quot; &quot;cc11_cv_042513&quot; &quot;cc16_ne_052413&quot;
+## [10,] &quot;cc8_ag_041913&quot;  &quot;cc13_mr_050113&quot; &quot;cc3_jt_040513&quot;  &quot;cc3_cd_040413&quot; 
+##       [,9]             [,10]            [,11]            [,12]           
+##  [1,] &quot;cc23_jc_072413&quot; &quot;cc11_cv_042513&quot; &quot;cc14_lw_050113&quot; &quot;cc13_mr_050113&quot;
+##  [2,] &quot;cc8_ag_041913&quot;  &quot;cc16_ne_052413&quot; &quot;cc2_dm_040213&quot;  &quot;cc22_an_072213&quot;
+##  [3,] &quot;cc3_cd_040413&quot;  &quot;cc24_mi_072613&quot; &quot;cc2_dm_040213&quot;  &quot;cc8_ag_041913&quot; 
+##  [4,] &quot;cc11_cv_042513&quot; &quot;cc8_ag_041913&quot;  &quot;cc16_ne_052413&quot; &quot;cc7_mp_041913&quot; 
+##  [5,] &quot;cc14_lw_050113&quot; &quot;cc12_mr_043013&quot; &quot;cc14_lw_050113&quot; &quot;cc11_cv_042513&quot;
+##  [6,] &quot;cc9_sl_042213&quot;  &quot;cc22_an_072213&quot; &quot;ims_1&quot;          &quot;cc3_cd_040413&quot; 
+##  [7,] &quot;cc14_lw_050113&quot; &quot;cc22_an_072213&quot; &quot;cc22_an_072213&quot; &quot;cc11_cv_042513&quot;
+##  [8,] &quot;cc12_mr_043013&quot; &quot;cc8_ag_041913&quot;  &quot;cc23_jc_072413&quot; &quot;cc22_an_072213&quot;
+##  [9,] &quot;cc3_cd_040413&quot;  &quot;cc16_ne_052413&quot; &quot;cc23_jc_072413&quot; &quot;cc7_mp_041913&quot; 
+## [10,] &quot;cc9_sl_042213&quot;  &quot;cc21_sp_071813&quot; &quot;cc3_cd_040413&quot;  &quot;cc18_jk_052813&quot;
+##       [,13]            [,14]            [,15]            [,16]           
+##  [1,] &quot;cc24_mi_072613&quot; &quot;cc18_jk_052813&quot; &quot;cc3_jt_040513&quot;  &quot;cc2_dm_040213&quot; 
+##  [2,] &quot;cc2_dm_040213&quot;  &quot;cc13_mr_050113&quot; &quot;cc7_mp_041913&quot;  &quot;cc24_mi_072613&quot;
+##  [3,] &quot;cc19_mg_061113&quot; &quot;cc14_lw_050113&quot; &quot;cc11_cv_042513&quot; &quot;cc11_cv_042513&quot;
+##  [4,] &quot;cc16_ne_052413&quot; &quot;cc16_ne_052413&quot; &quot;cc2_dm_040213&quot;  &quot;cc8_ag_041913&quot; 
+##  [5,] &quot;cc23_jc_072413&quot; &quot;cc8_ag_041913&quot;  &quot;cc3_jt_040513&quot;  &quot;cc3_jt_040513&quot; 
+##  [6,] &quot;cc18_jk_052813&quot; &quot;cc19_mg_061113&quot; &quot;cc12_mr_043013&quot; &quot;cc10_kv_042313&quot;
+##  [7,] &quot;cc10_kv_042313&quot; &quot;cc23_jc_072413&quot; &quot;cc9_sl_042213&quot;  &quot;cc22_an_072213&quot;
+##  [8,] &quot;cc16_ne_052413&quot; &quot;cc2_dm_040213&quot;  &quot;cc21_sp_071813&quot; &quot;cc13_mr_050113&quot;
+##  [9,] &quot;cc8_ag_041913&quot;  &quot;cc18_jk_052813&quot; &quot;cc18_jk_052813&quot; &quot;cc8_ag_041913&quot; 
+## [10,] &quot;cc12_mr_043013&quot; &quot;cc9_sl_042213&quot;  &quot;cc15_ib_051413&quot; &quot;cc22_an_072213&quot;
+##       [,17]            [,18]            [,19]            [,20]           
+##  [1,] &quot;cc3_cd_040413&quot;  &quot;ims_1&quot;          &quot;cc18_jk_052813&quot; &quot;cc3_jt_040513&quot; 
+##  [2,] &quot;cc3_jt_040513&quot;  &quot;cc12_mr_043013&quot; &quot;cc3_cd_040413&quot;  &quot;cc19_mg_061113&quot;
+##  [3,] &quot;cc16_ne_052413&quot; &quot;cc21_sp_071813&quot; &quot;cc24_mi_072613&quot; &quot;cc19_mg_061113&quot;
+##  [4,] &quot;cc8_ag_041913&quot;  &quot;cc18_jk_052813&quot; &quot;cc3_jt_040513&quot;  &quot;ims_1&quot;         
+##  [5,] &quot;cc2_dm_040213&quot;  &quot;cc19_mg_061113&quot; &quot;cc7_mp_041913&quot;  &quot;cc23_jc_072413&quot;
+##  [6,] &quot;cc3_cd_040413&quot;  &quot;cc12_mr_043013&quot; &quot;cc19_mg_061113&quot; &quot;cc23_jc_072413&quot;
+##  [7,] &quot;cc22_an_072213&quot; &quot;cc21_sp_071813&quot; &quot;ims_1&quot;          &quot;cc21_sp_071813&quot;
+##  [8,] &quot;cc21_sp_071813&quot; &quot;cc11_cv_042513&quot; &quot;cc15_ib_051413&quot; &quot;cc14_lw_050113&quot;
+##  [9,] &quot;cc23_jc_072413&quot; &quot;cc3_cd_040413&quot;  &quot;cc23_jc_072413&quot; &quot;cc9_sl_042213&quot; 
+## [10,] &quot;cc12_mr_043013&quot; &quot;cc7_mp_041913&quot;  &quot;cc16_ne_052413&quot; &quot;cc3_jt_040513&quot;</code></pre>
 </div>
 <div id="initialize-output" class="section level3">
 <h3>Initialize output</h3>
@@ -395,7 +415,7 @@ sum(duplicated(N))</code></pre>
 <p>In seconds.</p>
 <pre class="r"><code>tictoc[3]</code></pre>
 <pre><code>## elapsed 
-## 1350.82</code></pre>
+##  1356.3</code></pre>
 </div>
 </div>
 <div id="results" class="section level2">
