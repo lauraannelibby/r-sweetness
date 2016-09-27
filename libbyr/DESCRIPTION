@@ -1,11 +1,11 @@
 Package: libbyr
-Title: What the Package Does (one line, title case)
+Title: A Collection of Custom Functions
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Laura", "Libby", email = "lauraannelibby@gmail.com", role = c("aut", "cre"))
+Description: Handy functions, relatively generalizable. Available at https://github.com/lauraannelibby/r-sweetness/tree/master/libbyr
 Depends:
     R (>= 3.3.1)
-License: What license is it under?
+License: What license is it under? Great question.
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
