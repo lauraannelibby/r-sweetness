@@ -9,6 +9,7 @@ Bootstrapped model fit comparison on fMRI pattern similarity estimates from ante
 ## [libbyr](https://github.com/lauraannelibby/r-sweetness/tree/master/libbyr)
 An R package containing helpful custom functions.
 * __newscript()__ Opens a new .R script with an Rmd header and some basic initialization parameters (e.g. require packages). Header title is entered manually; date is auto-generated. Edit the template file like this:
+
 ```temppath <- find.package("libbyr")
 file.edit(paste0(temppath,'/templates/tempscript.txt'))```
 * _More to come?_
